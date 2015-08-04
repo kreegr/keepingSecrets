@@ -7,35 +7,54 @@ var words = require('./words');
 var filePath = path.resolve('.', 'words.json');
 var _ = require('lodash-node/underscore');
 var generatePassword = require('password-generator');
+var read = require('read');
+var exec = require('child_process').exec;
 
 var encrypt = function encrypt(){
     var label, message, secret;
     if (arguments[0]==="-g"){
         label = arguments[1];
-        secret = arguments[2];
         message = generatePassword(18, false);
-        console.log(message);
+    } else {
+        label = arguments[0];
+        message = arguments[1];
     }
 
-    var encrypted = crypto.Rabbit.encrypt(message, secret);
-    words[label] = "" + encrypted;
-    var newWords = JSON.stringify(words, null, 2);
-    fs.writeFileSync(filePath, newWords);
-    console.log('words updated');
+    read({
+        prompt : 'Secret:',
+        silent: true
+    }, function(err, secret){
+        if (err){
+            console.log('Error %s', err);
+            return;
+        }
+
+        var encrypted = crypto.Rabbit.encrypt(message, secret);
+        words[label] = "" + encrypted;
+        var newWords = JSON.stringify(words, null, 2);
+        fs.writeFileSync(filePath, newWords);
+        console.log('words updated %s : %s', label, message);
+    });
+
+
 };
 
-var decrypt = function decrypt(label, secret){
+var decrypt = function decrypt(label){
     var message = words[label];
-    var decrypted = crypto.Rabbit.decrypt(message, secret);
-    console.log("%s", decrypted.toString(crypto.enc.Utf8));
-    //var exec = require('child_process').exec;
-    //exec("echo " + decrypted.toString(crypto.enc.Utf8) + " | pbcopy", function(){console.log('done')});
-    //exec("history -c");
+    read({
+        prompt: 'Secret:',
+        silent: true
+    }, function(err, secret){
+        var decrypted = crypto.Rabbit.decrypt(message, secret);
+        var out = decrypted.toString(crypto.enc.Utf8);
+        exec("echo " + out + " | pbcopy", function(){console.log('done')});
+        exec("history -c");
+    });
 };
 
 var len = process.argv.length;
-var ENCRYPT_ARGS_LEN = 5;
-var DECRYPT_ARGS_LEN = 4;
+var ENCRYPT_ARGS_LEN = 4;
+var DECRYPT_ARGS_LEN = 3;
 var args;
 if (len === ENCRYPT_ARGS_LEN){
     args = [].concat(process.argv).splice(2-ENCRYPT_ARGS_LEN);
