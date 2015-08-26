@@ -5,7 +5,6 @@ var fs = require('fs');
 var path = require('path');
 var words = require('./words');
 var filePath = path.resolve(__dirname, '.', 'words.json');
-console.log(filePath);
 var _ = require('lodash-node/underscore');
 var generatePassword = require('password-generator');
 var read = require('read');
