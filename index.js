@@ -33,7 +33,9 @@ var encrypt = function encrypt(){
         words[label] = "" + encrypted;
         var newWords = JSON.stringify(words, null, 2);
         fs.writeFileSync(filePath, newWords);
-        console.log('words updated %s : %s', label, message);
+        console.log('words updated with %s', label);
+        console.log(message);
+        finish(message);
     });
 
 
@@ -47,9 +49,13 @@ var decrypt = function decrypt(label){
     }, function(err, secret){
         var decrypted = crypto.Rabbit.decrypt(message, secret);
         var out = decrypted.toString(crypto.enc.Utf8);
-        exec("echo " + out + " | pbcopy", function(){console.log('done')});
-        exec("history -c");
+        finish(out);
     });
+};
+
+var finish = function finish(out){
+    exec("printf " + out + " | pbcopy", function(){console.log('done')});
+    exec("history -c");
 };
 
 var len = process.argv.length;
