@@ -4,7 +4,8 @@ var crypto = require('crypto-js');
 var fs = require('fs');
 var path = require('path');
 var words = require('./words');
-var filePath = path.resolve(__dirname, '.', 'words.json');
+//var filePath = path.resolve(__dirname, '.', 'words.json');
+var WORDS_FILE_PATH = '~/.keeping_secrets';
 var _ = require('lodash-node/underscore');
 var generatePassword = require('password-generator');
 var read = require('read');
@@ -32,7 +33,7 @@ var encrypt = function encrypt(){
         var encrypted = crypto.Rabbit.encrypt(message, secret);
         words[label] = "" + encrypted;
         var newWords = JSON.stringify(words, null, 2);
-        fs.writeFileSync(filePath, newWords);
+        fs.writeFileSync(WORDS_FILE_PATH, newWords);
         console.log('words updated with %s', label);
         console.log(message);
         finish(message);
