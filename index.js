@@ -3,9 +3,8 @@
 var crypto = require('crypto-js');
 var fs = require('fs');
 var path = require('path');
-var words = require('./words');
-//var filePath = path.resolve(__dirname, '.', 'words.json');
-var WORDS_FILE_PATH = '~/.keeping_secrets';
+var WORDS_FILE_PATH = path.resolve('./.keeping_secrets');
+var words = require(WORDS_FILE_PATH);
 var _ = require('lodash-node/underscore');
 var generatePassword = require('password-generator');
 var read = require('read');
