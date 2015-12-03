@@ -1,6 +1,6 @@
 {
   "name": "crypto",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "local password manager",
   "main": "index.js",
   "scripts": {
