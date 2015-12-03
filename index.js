@@ -54,7 +54,7 @@ var decrypt = function decrypt(label){
 };
 
 var finish = function finish(out){
-    exec("printf " + out + " | pbcopy", function(){console.log('done')});
+    exec('printf "' + out + '" | pbcopy', function(){console.log('done')});
     exec("history -c");
 };
 
